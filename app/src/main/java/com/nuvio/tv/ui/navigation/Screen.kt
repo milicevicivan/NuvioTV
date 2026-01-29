@@ -34,6 +34,23 @@ sealed class Screen(val route: String) {
             return "stream/$videoId/$contentType/$encodedTitle?poster=$encodedPoster&backdrop=$encodedBackdrop&logo=$encodedLogo&season=${season ?: ""}&episode=${episode ?: ""}&episodeName=$encodedEpisodeName&genres=$encodedGenres&year=$encodedYear"
         }
     }
+    data object Player : Screen("player/{streamUrl}/{title}?headers={headers}") {
+        private fun encode(value: String): String = 
+            URLEncoder.encode(value, "UTF-8").replace("+", "%20")
+        
+        fun createRoute(
+            streamUrl: String,
+            title: String,
+            headers: Map<String, String>? = null
+        ): String {
+            val encodedUrl = encode(streamUrl)
+            val encodedTitle = encode(title)
+            val encodedHeaders = headers?.entries?.joinToString("&") { (k, v) ->
+                "${encode(k)}=${encode(v)}"
+            }?.let { encode(it) } ?: ""
+            return "player/$encodedUrl/$encodedTitle?headers=$encodedHeaders"
+        }
+    }
     data object Search : Screen("search")
     data object Settings : Screen("settings")
     data object AddonManager : Screen("addon_manager")

@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.nuvio.tv.ui.screens.detail.MetaDetailsScreen
 import com.nuvio.tv.ui.screens.home.HomeScreen
 import com.nuvio.tv.ui.screens.addon.AddonManagerScreen
+import com.nuvio.tv.ui.screens.player.PlayerScreen
 import com.nuvio.tv.ui.screens.search.SearchScreen
 import com.nuvio.tv.ui.screens.settings.SettingsScreen
 import com.nuvio.tv.ui.screens.stream.StreamScreen
@@ -110,10 +111,33 @@ fun NuvioNavHost(
             StreamScreen(
                 onBackPress = { navController.popBackStack() },
                 onStreamSelected = { playbackInfo ->
-                    // TODO: Navigate to player or handle stream playback
-                    // For now, just print the playback info
-                    android.util.Log.d("StreamScreen", "Selected stream: ${playbackInfo.url}")
+                    playbackInfo.url?.let { url ->
+                        navController.navigate(
+                            Screen.Player.createRoute(
+                                streamUrl = url,
+                                title = playbackInfo.title,
+                                headers = playbackInfo.headers
+                            )
+                        )
+                    }
                 }
+            )
+        }
+
+        composable(
+            route = Screen.Player.route,
+            arguments = listOf(
+                navArgument("streamUrl") { type = NavType.StringType },
+                navArgument("title") { type = NavType.StringType },
+                navArgument("headers") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) {
+            PlayerScreen(
+                onBackPress = { navController.popBackStack() }
             )
         }
 
