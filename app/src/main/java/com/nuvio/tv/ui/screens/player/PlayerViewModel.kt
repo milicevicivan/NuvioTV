@@ -257,12 +257,17 @@ class PlayerViewModel @Inject constructor(
     private fun scheduleHideControls() {
         hideControlsJob?.cancel()
         hideControlsJob = viewModelScope.launch {
-            delay(4000)
+            delay(3000)
             if (_uiState.value.isPlaying && !_uiState.value.showAudioDialog && 
                 !_uiState.value.showSubtitleDialog && !_uiState.value.showSpeedDialog) {
                 _uiState.update { it.copy(showControls = false) }
             }
         }
+    }
+
+    fun hideControls() {
+        hideControlsJob?.cancel()
+        _uiState.update { it.copy(showControls = false) }
     }
 
     fun onEvent(event: PlayerEvent) {

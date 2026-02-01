@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.background
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
@@ -118,6 +119,15 @@ class MainActivity : ComponentActivity() {
                                     if (drawerValue == DrawerValue.Open) {
                                         Image(
                                             painter = painterResource(id = R.drawable.nuvio_text),
+                                            contentDescription = "Nuvio",
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(48.dp),
+                                            contentScale = ContentScale.Fit
+                                        )
+                                    } else {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.nuvio_n),
                                             contentDescription = "Nuvio",
                                             modifier = Modifier
                                                 .fillMaxWidth()

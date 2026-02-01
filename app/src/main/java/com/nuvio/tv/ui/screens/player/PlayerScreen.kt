@@ -93,7 +93,13 @@ fun PlayerScreen(
     val playPauseFocusRequester = remember { FocusRequester() }
 
     BackHandler {
-        onBackPress()
+        if (uiState.showControls) {
+            // If controls are visible, hide them instead of going back
+            viewModel.hideControls()
+        } else {
+            // If controls are hidden, go back
+            onBackPress()
+        }
     }
 
     // Handle lifecycle events
