@@ -86,4 +86,14 @@ sealed class Screen(val route: String) {
     data object ThemeSettings : Screen("theme_settings")
     data object AddonManager : Screen("addon_manager")
     data object Plugins : Screen("plugins")
+    data object LayoutSelection : Screen("layout_selection")
+    data object LayoutSettings : Screen("layout_settings")
+    data object CatalogSeeAll : Screen("catalog_see_all/{catalogId}/{addonId}/{type}") {
+        private fun encode(value: String): String =
+            URLEncoder.encode(value, "UTF-8").replace("+", "%20")
+
+        fun createRoute(catalogId: String, addonId: String, type: String): String {
+            return "catalog_see_all/${encode(catalogId)}/${encode(addonId)}/${encode(type)}"
+        }
+    }
 }

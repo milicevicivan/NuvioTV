@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.filled.ViewModule
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +48,8 @@ import com.nuvio.tv.ui.theme.NuvioColors
 fun SettingsScreen(
     onNavigateToPlugins: () -> Unit = {},
     onNavigateToTmdb: () -> Unit = {},
-    onNavigateToTheme: () -> Unit = {}
+    onNavigateToTheme: () -> Unit = {},
+    onNavigateToLayout: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -83,6 +85,15 @@ fun SettingsScreen(
                     title = "Appearance",
                     subtitle = "Choose your color theme",
                     onClick = onNavigateToTheme
+                )
+            }
+
+            item {
+                SettingsItem(
+                    icon = Icons.Default.ViewModule,
+                    title = "Home Layout",
+                    subtitle = "Choose between classic rows or grid view",
+                    onClick = onNavigateToLayout
                 )
             }
 

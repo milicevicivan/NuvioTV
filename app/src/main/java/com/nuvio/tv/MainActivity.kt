@@ -45,6 +45,7 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import coil.compose.AsyncImage
+import com.nuvio.tv.data.local.LayoutPreferenceDataStore
 import com.nuvio.tv.data.local.ThemeDataStore
 import com.nuvio.tv.domain.model.AppTheme
 import com.nuvio.tv.ui.navigation.NuvioNavHost
@@ -61,17 +62,22 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var themeDataStore: ThemeDataStore
 
+    @Inject
+    lateinit var layoutPreferenceDataStore: LayoutPreferenceDataStore
+
     @OptIn(ExperimentalTvMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val currentTheme by themeDataStore.selectedTheme.collectAsState(initial = AppTheme.CRIMSON)
+            val hasChosenLayout by layoutPreferenceDataStore.hasChosenLayout.collectAsState(initial = true)
 
             NuvioTheme(appTheme = currentTheme) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     shape = RectangleShape
                 ) {
+                    val startDestination = if (hasChosenLayout) Screen.Home.route else Screen.LayoutSelection.route
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentRoute = navBackStackEntry?.destination?.route
@@ -184,12 +190,12 @@ class MainActivity : ComponentActivity() {
                             }
                         ) {
                             Box(modifier = Modifier.fillMaxSize()) {
-                                NuvioNavHost(navController = navController)
+                                NuvioNavHost(navController = navController, startDestination = startDestination)
                             }
                         }
                     } else {
                         Box(modifier = Modifier.fillMaxSize()) {
-                            NuvioNavHost(navController = navController)
+                            NuvioNavHost(navController = navController, startDestination = startDestination)
                         }
                     }
                 }

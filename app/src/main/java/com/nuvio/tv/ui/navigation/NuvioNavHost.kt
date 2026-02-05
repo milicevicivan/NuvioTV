@@ -6,6 +6,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.nuvio.tv.ui.screens.CatalogSeeAllScreen
+import com.nuvio.tv.ui.screens.LayoutSelectionScreen
 import com.nuvio.tv.ui.screens.detail.MetaDetailsScreen
 import com.nuvio.tv.ui.screens.home.HomeScreen
 import com.nuvio.tv.ui.screens.addon.AddonManagerScreen
@@ -13,6 +15,7 @@ import com.nuvio.tv.ui.screens.library.LibraryScreen
 import com.nuvio.tv.ui.screens.player.PlayerScreen
 import com.nuvio.tv.ui.screens.plugin.PluginScreen
 import com.nuvio.tv.ui.screens.search.SearchScreen
+import com.nuvio.tv.ui.screens.settings.LayoutSettingsScreen
 import com.nuvio.tv.ui.screens.settings.SettingsScreen
 import com.nuvio.tv.ui.screens.settings.ThemeSettingsScreen
 import com.nuvio.tv.ui.screens.settings.TmdbSettingsScreen
@@ -27,10 +30,23 @@ fun NuvioNavHost(
         navController = navController,
         startDestination = startDestination
     ) {
+        composable(Screen.LayoutSelection.route) {
+            LayoutSelectionScreen(
+                onContinue = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.LayoutSelection.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable(Screen.Home.route) {
             HomeScreen(
                 onNavigateToDetail = { itemId, itemType, addonBaseUrl ->
                     navController.navigate(Screen.Detail.createRoute(itemId, itemType, addonBaseUrl))
+                },
+                onNavigateToCatalogSeeAll = { catalogId, addonId, type ->
+                    navController.navigate(Screen.CatalogSeeAll.createRoute(catalogId, addonId, type))
                 }
             )
         }
@@ -242,7 +258,8 @@ fun NuvioNavHost(
             SettingsScreen(
                 onNavigateToPlugins = { navController.navigate(Screen.Plugins.route) },
                 onNavigateToTmdb = { navController.navigate(Screen.TmdbSettings.route) },
-                onNavigateToTheme = { navController.navigate(Screen.ThemeSettings.route) }
+                onNavigateToTheme = { navController.navigate(Screen.ThemeSettings.route) },
+                onNavigateToLayout = { navController.navigate(Screen.LayoutSettings.route) }
             )
         }
 
@@ -264,6 +281,34 @@ fun NuvioNavHost(
 
         composable(Screen.Plugins.route) {
             PluginScreen(
+                onBackPress = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.LayoutSettings.route) {
+            LayoutSettingsScreen(
+                onBackPress = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = Screen.CatalogSeeAll.route,
+            arguments = listOf(
+                navArgument("catalogId") { type = NavType.StringType },
+                navArgument("addonId") { type = NavType.StringType },
+                navArgument("type") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val catalogId = backStackEntry.arguments?.getString("catalogId") ?: ""
+            val addonId = backStackEntry.arguments?.getString("addonId") ?: ""
+            val type = backStackEntry.arguments?.getString("type") ?: ""
+            CatalogSeeAllScreen(
+                catalogId = catalogId,
+                addonId = addonId,
+                type = type,
+                onNavigateToDetail = { itemId, itemType, addonBaseUrl ->
+                    navController.navigate(Screen.Detail.createRoute(itemId, itemType, addonBaseUrl))
+                },
                 onBackPress = { navController.popBackStack() }
             )
         }
