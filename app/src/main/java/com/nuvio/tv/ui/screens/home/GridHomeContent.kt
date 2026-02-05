@@ -194,7 +194,7 @@ fun GridHomeContent(
 
                     is GridItem.SeeAll -> {
                         item(
-                            key = "see_all_${gridItem.catalogId}_${gridItem.addonId}",
+                            key = "see_all_${gridItem.catalogId}_${gridItem.addonId}_${gridItem.type}",
                             span = { TvGridItemSpan(1) }
                         ) {
                             SeeAllGridCard(
