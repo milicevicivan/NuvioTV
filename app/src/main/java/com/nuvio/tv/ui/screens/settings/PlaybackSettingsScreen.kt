@@ -540,7 +540,7 @@ fun PlaybackSettingsContent(
                 ToggleSettingsItem(
                     icon = Icons.Default.Wifi,
                     title = "Parallel Connections",
-                    subtitle = "Use multiple TCP connections for faster progressive downloads (MKV, MP4). Can multiply throughput on connections limited to ~100 Mbps per stream.",
+                    subtitle = "Use multiple TCP connections for faster progressive downloads. Can multiply throughput on connections limited to ~100 Mbps per stream.",
                     isChecked = playerSettings.bufferSettings.useParallelConnections,
                     onCheckedChange = { enabled ->
                         coroutineScope.launch {
